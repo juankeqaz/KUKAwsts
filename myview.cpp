@@ -202,6 +202,7 @@ void myview::mousePressEvent(QMouseEvent *event)
 //      }
 //      else {
           t_pick_status=m_context->Select(true);
+
 //      }
     }
   else if(event->buttons()&Qt::MidButton)

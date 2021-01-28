@@ -796,3 +796,72 @@ void DetecSting::on_radioButton_sweep_edge_clicked()
         myoccview->addshapetocontent(wire);
     }
 }
+
+void DetecSting::on_radioButton_input_cheoice_clicked()
+{
+    if(workshape.IsNull())
+    {
+        return;
+    }
+    _toolcd->removeshape();
+    TopoDS_Face face=getshapeface(workshape,6);
+    //pathpoint=pathpointfromface(face);
+    //printpathpoint();
+    //QVector3D qnorm;
+    //qnorm=eulerformpoint(pathpoint.at(1),pathpoint.at(0),pathpoint.last());//法线计算欧拉角
+    //setfacepathformvec(qnorm);
+//    int zmax=-1; int count=0;
+//    for(TopExp_Explorer ex(workshape,TopAbs_WIRE);ex.More();ex.Next())
+//    {
+//        TopoDS_Wire awire=TopoDS::Wire(ex.Current());
+//        count++;
+
+
+//    }
+
+    BRepMesh_IncrementalMesh(workshape,0.001);
+    gp_Pnt vertex1;
+    gp_Pnt vertex2;
+    gp_Pnt vertex3;
+    TopExp_Explorer faceExplorer;
+    for(faceExplorer.Init(workshape,TopAbs_FACE);faceExplorer.More();faceExplorer.Next())
+    {
+        TopLoc_Location loc;
+        TopoDS_Face aFace=TopoDS::Face(faceExplorer.Current());
+        QVector<QVector3D> pvec;
+
+        TopoDS_Wire wire=getwirefromface(aFace);
+        TopExp_Explorer ex(wire,TopAbs_EDGE);
+        for(;ex.More();ex.Next())
+        {
+            TopoDS_Edge edge=TopoDS::Edge(ex.Current());
+            Standard_Real first;
+            Standard_Real end;
+            BRep_Tool::Range(edge,first,end);
+            Handle(Geom_Curve) cur=BRep_Tool::Curve(edge,first,end);
+            if(cur->IsInstance("Geom_Line"))
+            {
+                gp_Pnt pi;
+                pi=cur->Value(first);
+                pvec.push_back(QVector3D(pi.X(),pi.Y(),pi.Z()));
+                pi=cur->Value(end);
+                pvec.push_back(QVector3D(pi.X(),pi.Y(),pi.Z()));
+            }else
+            {
+                for(Standard_Integer i=first;i<end;i++)
+                {
+                    gp_Pnt pi;
+                    cur->D0(i,pi);
+                    pvec.push_back(QVector3D(pi.X(),pi.Y(),pi.Z()));
+                }
+            }
+        }
+        qDebug()<<"pvec is ok!!!"<<pvec.size()<<"\n"<<pvec;
+
+    }
+
+
+    //myoccview->removeshape();
+    //myoccview->addshapetocontent(aFace);
+
+}

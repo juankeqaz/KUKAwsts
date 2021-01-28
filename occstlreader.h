@@ -18,8 +18,10 @@ public:
     }
 signals:
     void updatamape(QString str,TopoDS_Shape shape);
+    void updatemapes(QVector<TopoDS_Shape> shape);
 private slots:
     void readashape(QString str);
+    void readstepshape(QString str);
 private:
     TopoDS_Shape *_shape=NULL;
     StlAPI_Reader *reader;

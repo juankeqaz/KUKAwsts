@@ -26,3 +26,30 @@ void OccStlReader::readashape(QString str)
     //shapemap[str]=_shape;
     emit updatamape(str,_shape);
 }
+
+void OccStlReader::readstepshape(QString str)
+{
+    QVector<TopoDS_Shape> shapevec;
+    STEPControl_Reader aReader_step;
+    IFSelect_ReturnStatus status = aReader_step.ReadFile(str.toStdString().c_str());
+    if(status!=IFSelect_RetDone)
+    {
+        qDebug()<<"add file failure";
+        return;
+    }
+
+    aReader_step.WS()->MapReader()->SetTraceLevel(2);
+    aReader_step.PrintCheckLoad(Standard_False,IFSelect_ItemsByEntity);
+    aReader_step.PrintCheckTransfer(Standard_False,IFSelect_ItemsByEntity);
+        //qDebug()<<aReader_step.NbRootsForTransfer()<<aReader_step.NbShapes();
+    for(Standard_Integer i=1;i<=aReader_step.NbRootsForTransfer();i++)
+        aReader_step.TransferRoot(i);
+    for(Standard_Integer i=1;i<=aReader_step.NbShapes();i++)
+    {
+        TopoDS_Shape shape_step=aReader_step.Shape(i);
+        shapevec.push_back(shape_step);
+    }
+    //qDebug()<<"OccStlReader::readstepshape"<<str<<shapevec.size();
+    emit updatemapes(shapevec);
+
+}

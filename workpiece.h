@@ -102,7 +102,9 @@ private slots:
 
    void on_pushButton_newdir_clicked();
 
-   void shapemodelready(QString filename,TopoDS_Shape shape);
+   void shapemodelready(QVector<TopoDS_Shape> shape);
+
+   void on_pushButton_input_ok_clicked();
 
 protected:
     void mousePressEvent(QMouseEvent *event);

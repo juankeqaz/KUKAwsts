@@ -41,6 +41,7 @@ SOURCES += \
     occstlreader.cpp \
     occview.cpp \
     pipes.cpp \
+    planner.cpp \
     quiwidget.cpp \
     robotmodel.cpp \
     runpage.cpp \
@@ -85,6 +86,7 @@ HEADERS += \
     occstlreader.h \
     occview.h \
     pipes.h \
+    planner.h \
     quiwidget.h \
     robotmodel.h \
     runpage.h \

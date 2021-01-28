@@ -70,6 +70,11 @@
 #include <assimp/Exporter.hpp>
 #include <StlAPI_Reader.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
+#include <STEPCAFControl_Reader.hxx>
+#include <XSControl.hxx>
+#include <XSControl_WorkSession.hxx>
+#include <Transfer_TransientProcess.hxx>
+#include <IFSelect_ReturnStatus.hxx>
 
 
 #include <QVector>

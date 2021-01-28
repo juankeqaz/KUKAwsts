@@ -78,6 +78,8 @@ private slots:
 
     void on_radioButton_sweep_edge_clicked();
 
+    void on_radioButton_input_cheoice_clicked();
+
 private:
     void initForms();
     void showshapes(const float ox,const float oy,const float oz,const float x,const float y,const float z,const float px,const float py,const float pz);

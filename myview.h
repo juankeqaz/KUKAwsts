@@ -29,7 +29,8 @@ public slots:
     void removeshape();
     TopoDS_Shape getshape()
     {
-        return _currentshape->Shape();
+        //m_context->Current().get()->Children().First();
+       return _currentshape->Shape();
     }
     int selectshapeposition();
     void setstlmodelformurl(QString url);

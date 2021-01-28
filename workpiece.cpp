@@ -14,9 +14,9 @@ WorkPiece::WorkPiece(QWidget *parent) :
     ispress=false;
     reader=new OccStlReader();
 
-    qRegisterMetaType<TopoDS_Shape> ("TopoDS_Shape");
-    connect(this,SIGNAL(getstlmodelformstring(QString)),reader,SLOT(readashape(QString)));
-    connect(reader,SIGNAL(updatamape(QString,TopoDS_Shape)),this,SLOT(shapemodelready(QString,TopoDS_Shape)));
+    qRegisterMetaType<QVector<TopoDS_Shape>> ("QVector<TopoDS_Shape>");
+    connect(this,SIGNAL(getstlmodelformstring(QString)),reader,SLOT(readstepshape(QString)));
+    connect(reader,SIGNAL(updatemapes(QVector<TopoDS_Shape>)),this,SLOT(shapemodelready(QVector<TopoDS_Shape>)));
 }
 
 WorkPiece::~WorkPiece()
@@ -414,10 +414,11 @@ void WorkPiece::on_stackedWidget_parame_currentChanged(int arg1)
 
 void WorkPiece::on_pushButton_input_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "打开文件", qApp->applicationDirPath(), "模型文件(*.stl)");
+    QString fileName = QFileDialog::getOpenFileName(this, "打开文件", qApp->applicationDirPath(), "模型文件(*.step;*.stp)");
     if (!fileName.isEmpty()) {
         ui->textEdit_path->setText(fileName);
-    }
+    }else
+        return;
     emit getstlmodelformstring(fileName);
 }
 
@@ -428,15 +429,20 @@ void WorkPiece::on_pushButton_newdir_clicked()
 
 }
 
-void WorkPiece::shapemodelready(QString filename, TopoDS_Shape shape)
+void WorkPiece::shapemodelready(QVector<TopoDS_Shape> shape)
 {
-    qDebug()<<ui->textEdit_path->document()->toPlainText()<<filename<<(ui->textEdit_path->document()->toPlainText()==filename);
-    if(ui->textEdit_path->document()->toPlainText()==filename)
+    if(shape.size()==0) return;
+    m_view->reset();
+    m_view->showgrounds(true);
+    for(int i=0;i<shape.size();++i)
     {
-        currentshape=shape;
-        m_view->reset();
-        m_view->addshapetocontent(shape);
-        emit definedshape(currentshape);
-    }else
-        return;
+        currentshape=shape.at(i);
+        m_view->addshapetocontent(shape.at(i));
+    }        
+}
+
+void WorkPiece::on_pushButton_input_ok_clicked()
+{
+    //currentshape=m_view->m_get_context()->SelectedShape();
+    emit definedshape(currentshape);
 }
